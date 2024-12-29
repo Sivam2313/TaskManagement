@@ -41,6 +41,9 @@ const editTask = asyncHandler(async(req,res)=>{
     task.priority = priority;
     task.startTime = startTime;
     task.endTime = endTime;
+    if(status==2 && task.status==1){
+        task.timeCompleted = new Date();
+    }
     task.status = status;
     const updatedTask = await task.save();
     if(updatedTask){
@@ -52,8 +55,19 @@ const editTask = asyncHandler(async(req,res)=>{
 })
 
 const getTaskList = asyncHandler(async(req,res)=>{
+    const {priority, status, sort} = req.body;
     const user = await User.findById(req.userId);
-    const tasks = await Task.find({userId:user});
+    var tasks = await Task.find({userId:user});
+    if(priority!=0){
+        tasks = tasks.filter((task)=>{
+            return task.priority === priority
+        })
+    }
+    if(status != 0){
+        tasks = tasks.filter((task)=>{
+            return task.status === status
+        })
+    }
     if(tasks){
         res.status(201).json(tasks);
     }
@@ -62,5 +76,102 @@ const getTaskList = asyncHandler(async(req,res)=>{
     }
 })
 
+const getTables = asyncHandler(async(req,res)=>{
+    const user = await User.findById(req.userId);
+    const tasks = await Task.find({userId:user});
+    var data = []
+    for(var i = 1;i<=5;i++){
+        var filteredTasks = tasks.filter((task)=>{
+            return (task.priority==i && task.status == 1);
+        })
+        var currTime = new Date();
+        var totalLapsedTime = 0;
+        var totalTimeToFinish = 0;
+        filteredTasks.forEach(task => {
+            var diffInMilliseconds = Math.abs(currTime - task.startTime);
+            if(diffInMilliseconds>0){
+                totalLapsedTime += diffInMilliseconds/(1000*60*60);
+            }
+            diffInMilliseconds = Math.abs(task.endTime-currTime);
+            if(diffInMilliseconds>0){
+                totalTimeToFinish += diffInMilliseconds/(1000*60*60);
+            }
+        });
 
-module.exports = {createTask, editTask, getTaskList};
+        data.push({
+            "pendingTasks":Math.floor(filteredTasks.length),
+            "totalLapsedTime":Math.floor(totalLapsedTime),
+            "totalTimeToComplete":Math.floor(totalTimeToFinish),
+        })
+        
+    }
+    if(data){
+        res.status(201).json(data);
+    }
+})
+
+const getDetails = asyncHandler(async(req,res)=>{
+    const user = await User.findById(req.userId);
+    const tasks = await Task.find({userId:user});
+    const totalTasks = tasks.length;
+    const pendingTasks = tasks.filter((task)=>{
+        return task.status == 1;
+    })
+    const completedTasks = tasks.filter((task)=>{
+        return task.status == 2;
+    })
+    var totalLapsedTime = 0;
+    var totalTimeToFinish = 0;
+    var avgTimeToFinish = 0;
+    const currTime = new Date();
+    pendingTasks.forEach(task => {
+        var diffInMilliseconds = Math.abs(currTime - task.startTime);
+        if(diffInMilliseconds>0){
+            totalLapsedTime += diffInMilliseconds/(1000*60*60);
+        }
+        diffInMilliseconds = Math.abs(task.endTime-currTime);
+        if(diffInMilliseconds>0){
+            totalTimeToFinish += diffInMilliseconds/(1000*60*60);
+        }
+    })
+    completedTasks.forEach(task => {
+        var diffInMilliseconds = Math.abs(task.timeCompleted - task.startTime);
+        if(diffInMilliseconds>0){
+            avgTimeToFinish += diffInMilliseconds/(1000*60*60);
+        }
+    })
+    avgTimeToFinish = avgTimeToFinish/completedTasks.length;
+    if(tasks){
+        res.status(201).json({
+            totalTasks,
+            pendingTasks:pendingTasks.length,
+            completedTasks:completedTasks.length,
+            totalLapsedTime,
+            totalTimeToFinish,
+            avgTimeToFinish,
+        });
+    }
+    else{
+        throw new Error('error');
+    }
+})
+
+const deleteTask = asyncHandler(async(req,res)=>{
+    const {taskId} = req.body;
+    const task = await Task.findById(taskId);
+    if(!task){
+        res.status(404).json({error:'task not found'});
+        return;
+    }
+    const deletedTask = await Task.deleteOne(task);
+    if(deletedTask){
+        res.status(201).json({message:'task deleted'});
+    }
+    else{
+        throw new Error('error');
+    }
+})
+
+
+
+module.exports = {createTask, editTask, getTaskList, getTables, getDetails, deleteTask};

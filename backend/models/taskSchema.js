@@ -23,9 +23,12 @@ const taskSchema = mongoose.Schema({
         required:true,
     },
     status:{
-        type:String,
+        type:Number,
         required:true,
     },
+    timeCompleted:{
+        type:Date,
+    }
 },{
     timestamp:true,
 })
