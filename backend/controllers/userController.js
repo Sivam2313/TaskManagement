@@ -20,7 +20,7 @@ const authUser = asyncHandler(async(req,res)=>{
                 expiresIn: '1h',
             });
             
-            res.status(201).json(token);
+            res.status(201).json({"access":token});
         }
         else    
             res.status(400).json({email:'error'})
@@ -35,7 +35,7 @@ const authUser = asyncHandler(async(req,res)=>{
         const token = jwt.sign({ userId: newUser._id }, process.env.SECRET_KEY, {
             expiresIn: '1h',
         });
-        res.status(201).json(token);
+        res.status(201).json({"access":token});
     }
     else{
         throw new Error ('error')
