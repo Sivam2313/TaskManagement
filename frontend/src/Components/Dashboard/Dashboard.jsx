@@ -1,8 +1,13 @@
+import { Box, Typography } from '@mui/material'
 import React from 'react'
 
 const Dashboard = () => {
   return (
-    <div>Dashboard</div>
+    <Box sx={{'display': 'flex', 'flexDirection': 'column', 'alignItems': 'center', 'height': '85vh', 'width':"80vw", 'paddingLeft':'10vw', 'marginTop': '10vh'}}>
+        <Box>
+          
+        </Box>
+    </Box>
   )
 }
 

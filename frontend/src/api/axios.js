@@ -13,3 +13,16 @@ export const axiosPrivate = axios.create({
   },
   withCredentials: true,
 });
+
+axiosPrivate.interceptors.request.use(
+  (config) => {
+      const token = localStorage.getItem('authTokens');
+      if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
