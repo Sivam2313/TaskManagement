@@ -19,6 +19,7 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import useAuth from '../../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 200;
 
@@ -56,6 +57,7 @@ export default function Navbar() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const { logoutUser } = useAuth();
+  const navigate = useNavigate();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -67,6 +69,14 @@ export default function Navbar() {
 
   const logoutHandler = () => {
     logoutUser();
+  }
+
+  function handleNavigate(index){
+    if(index === 0){
+      navigate('/')
+    }else if(index === 1){
+      navigate('/tasklist');
+    }
   }
 
   return (
@@ -114,7 +124,7 @@ export default function Navbar() {
         <Divider />
         <List>
           {['Dashboard', 'Task List'].map((text, index) => (
-            <ListItem key={text} disablePadding>
+            <ListItem key={text} disablePadding onClick={()=>handleNavigate(index)}>
               <ListItemButton>
                 <ListItemIcon>
                   {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}

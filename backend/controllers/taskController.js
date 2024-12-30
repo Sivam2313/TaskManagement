@@ -55,7 +55,9 @@ const editTask = asyncHandler(async(req,res)=>{
 })
 
 const getTaskList = asyncHandler(async(req,res)=>{
-    const {priority, status, sort} = req.body;
+    const {priority, status} = req.body;
+    console.log(priority,status);
+    
     const user = await User.findById(req.userId);
     var tasks = await Task.find({userId:user});
     if(priority!=0){
@@ -162,19 +164,17 @@ const getDetails = asyncHandler(async(req,res)=>{
 })
 
 const deleteTask = asyncHandler(async(req,res)=>{
-    const {taskId} = req.body;
-    const task = await Task.findById(taskId);
-    if(!task){
-        res.status(404).json({error:'task not found'});
-        return;
-    }
-    const deletedTask = await Task.deleteOne(task);
-    if(deletedTask){
-        res.status(201).json({message:'task deleted'});
-    }
-    else{
-        throw new Error('error');
-    }
+    const {taskIds} = req.body;
+
+    console.log(taskIds);
+    
+
+    taskIds.forEach(async(taskId)=>{
+        const task = await Task.findById(taskId);
+        if(task)
+            await Task.deleteOne(task);
+    })
+    res.status(201).json({message:'tasks deleted'});
 })
 
 
