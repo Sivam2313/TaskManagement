@@ -1,15 +1,23 @@
 import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Paper, Select, Stack, TextField, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { createtask, editTask } from '../../api/tasks';
 
 const EditTasks = ({open,setOpen,task}) => {
-    const [name, setName] = useState(task.name);
-    const [priority, setPriority] = useState(task.priority);
-    const [startTime, setStartTime] = useState(task.startTime);
-    const [endTime, setEndTime] = useState(task.endTime);
-    const [status, setStatus] = useState(task.status);
+    const [name, setName] = useState("");
+    const [priority, setPriority] = useState(1);
+    const [startTime, setStartTime] = useState("");
+    const [endTime, setEndTime] = useState("");
+    const [status, setStatus] = useState(1);
+
+    useEffect(() => {
+        setName(task.name);
+        setPriority(task.priority);
+        setStartTime(new Date(task.startTime));
+        setEndTime(new Date(task.endTime));
+        setStatus(task.status);
+    }, [task])
 
     const handleOpen = () => {
         setOpen(true);
@@ -64,7 +72,7 @@ const EditTasks = ({open,setOpen,task}) => {
                     Create Task
                 </Typography>
                 <Box>
-                    <TextField id="outlined-basic" sx={{width:'100%'}} label="Title" onChange={(e)=>setName(e.target.value)} variant="outlined" />
+                    <TextField id="outlined-basic" sx={{width:'100%'}} label="Title" defaultValue={task.name} onChange={(e)=>setName(e.target.value)} variant="outlined" />
                 </Box>
                 <Stack direction='row' spacing={2}>
                       <FormControl sx={{ minWidth: 120 }} size="small">

@@ -60,7 +60,7 @@ const TaskList = () => {
             console.log(err);
         })
 
-    }, [priority, status, showCreateTask, taskData])
+    }, [priority, status, showCreateTask])
 
     const columns = [
         { field: '_id', headerName: 'ID', width: 130 },

@@ -56,7 +56,7 @@ const editTask = asyncHandler(async(req,res)=>{
 
 const getTaskList = asyncHandler(async(req,res)=>{
     const {priority, status} = req.body;
-    console.log(priority,status);
+    // console.log(priority,status);
     
     const user = await User.findById(req.userId);
     var tasks = await Task.find({userId:user});

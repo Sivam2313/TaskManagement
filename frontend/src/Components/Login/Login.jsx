@@ -33,7 +33,7 @@ const Login = () => {
                 Login
             </Typography>
             <TextField id="outlined-basic" onChange={(e)=>setEmail(e.target.value)} label="Email" variant="outlined" />
-            <TextField id="outlined-basic" onChange={(e)=>setPassword(e.target.value)} label="Password" variant="outlined" />
+            <TextField id="outlined-basic" type='password' onChange={(e)=>setPassword(e.target.value)} label="Password" variant="outlined" />
             <Button variant="contained" sx={{height:"50px"}} onClick={loginHandler}>Login</Button>
         </Stack>
     </Box>

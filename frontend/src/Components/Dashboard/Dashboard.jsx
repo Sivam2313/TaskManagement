@@ -17,12 +17,18 @@ const Dashboard = () => {
   useEffect(() => {
     getDetails().then((data) => {
       setTotalTasks(data.totalTasks);
-      setCompletedTasks(Math.floor((data.completedTasks*100)/data.totalTasks));
+      if(data.completedTasks === 0 || data.totalTasks === 0)
+        setCompletedTasks(0);
+      else
+        setCompletedTasks(Math.floor((data.completedTasks*100)/data.totalTasks));
+      if(data.pendingTasks === 0 || data.totalTasks === 0)
+        setPendingTasks(0);
+      else  
+        setPendingTasksPercent(Math.floor((data.pendingTasks/data.totalTasks)*100));
       setPendingTasks(data.pendingTasks);
       setTotalLapsedTime(data.totalLapsedTime);
       setTotalTimeToFinish(data.totalTimeToFinish);
       setAvgTimeToFinish(data.avgTimeToFinish);
-      setPendingTasksPercent(Math.floor((data.pendingTasks/data.totalTasks)*100));
     })
     .catch((err) => {
       console.log(err);
