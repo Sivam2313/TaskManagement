@@ -99,6 +99,7 @@ const getTables = asyncHandler(async(req,res)=>{
         });
 
         data.push({
+            "priority":i,
             "pendingTasks":Math.floor(filteredTasks.length),
             "totalLapsedTime":Math.floor(totalLapsedTime),
             "totalTimeToComplete":Math.floor(totalTimeToFinish),
@@ -134,13 +135,17 @@ const getDetails = asyncHandler(async(req,res)=>{
             totalTimeToFinish += diffInMilliseconds/(1000*60*60);
         }
     })
+    
     completedTasks.forEach(task => {
         var diffInMilliseconds = Math.abs(task.timeCompleted - task.startTime);
         if(diffInMilliseconds>0){
             avgTimeToFinish += diffInMilliseconds/(1000*60*60);
         }
     })
-    avgTimeToFinish = avgTimeToFinish/completedTasks.length;
+    
+    totalLapsedTime = Math.floor(totalLapsedTime);
+    totalTimeToFinish = Math.floor(totalTimeToFinish);
+    avgTimeToFinish = Math.floor(avgTimeToFinish/completedTasks.length);
     if(tasks){
         res.status(201).json({
             totalTasks,
