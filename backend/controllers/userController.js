@@ -17,7 +17,7 @@ const authUser = asyncHandler(async(req,res)=>{
         const passwordMatch = await bcrypt.compare(password, user.password);
         if(passwordMatch){
             const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
-                expiresIn: '1h',
+                expiresIn: '30d',
             });
             
             res.status(201).json({"access":token});
