@@ -147,7 +147,8 @@ const getDetails = asyncHandler(async(req,res)=>{
     
     totalLapsedTime = Math.floor(totalLapsedTime);
     totalTimeToFinish = Math.floor(totalTimeToFinish);
-    avgTimeToFinish = Math.floor(avgTimeToFinish/completedTasks.length);
+    if(completedTasks.length>0)
+        avgTimeToFinish = Math.floor(avgTimeToFinish/completedTasks.length);
     if(tasks){
         res.status(201).json({
             totalTasks,

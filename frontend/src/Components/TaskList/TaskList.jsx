@@ -68,7 +68,7 @@ const TaskList = () => {
         { field: 'priority', headerName: 'Priority', width: 130 },
         { field: 'startTime', headerName: 'Start Time', width: 130 },
         { field: 'endTime', headerName: 'End Time', width: 130 },
-        { field: 'status', headerName: 'Status', width: 130 },
+        { field: 'status', headerName: 'Status', width: 130,valueGetter: (value,row) => (value === 1) ? 'Pending' : 'Finished'},
         {
             field: 'Edit',
             headerName: 'Edit Tasks',
