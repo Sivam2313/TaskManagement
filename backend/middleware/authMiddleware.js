@@ -6,6 +6,7 @@ function verifyToken(req, res, next) {
         const decoded = jwt.verify(token, process.env.SECRET_KEY);
         
         req.userId = decoded.userId;
+        console.log(req.userId);
         next();
     } catch (error) {
         res.status(401).json({ error: error.message });
